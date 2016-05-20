@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>polyedit</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css"/>
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+<body>
+  <div class="container"><h1 id="polyedit"><a class="header-link" href="#polyedit"></a>polyedit</h1>
+<h3 id="2d-lowpoly-editor-heavily-based-on-this-one-raincomplex-net-lowpolyeditor-"><a class="header-link" href="#2d-lowpoly-editor-heavily-based-on-this-one-raincomplex-net-lowpolyeditor-"></a>2D lowpoly editor heavily based on <a href="raincomplex.net/lowpolyeditor">this one</a></h3>
+<p class="img-container"><img src="Screenshots/screenshot.png" alt="Image" style="
+    max-width: 100%;
+    height: auto;
+    width: auto\9;"></p>
+<h3 id="download"><a class="header-link" href="#download"></a>Download</h3>
+<p><a href="https://github.com/shbaldw/polyedit/releases/download/1.0/polyedit.zip">Direct link</a></p>
+<p><a href="https://github.com/shbaldw/polyedit/releases">Releases page</a></p>
+<h3 id="controls"><a class="header-link" href="#controls"></a>Controls</h3>
+<p>Controls are very similar to the editor it&#39;s based on, with a few changes.
+Panning works without a mouse.</p>
+<ul class="list">
+<li><strong>Mouse controls</strong><ul class="list">
+<li>Left click: Place point/select point</li>
+<li>Right click: Select polygon with center nearest to mouse</li>
+<li>Middle (scrollwheel) click: Pan camera</li>
+</ul>
+</li>
+<li><strong>Keyboard controls</strong><ul class="list">
+<li>S: Save image </li>
+<li><strong>Camera</strong><ul class="list">
+<li>LControl: Identical to middle mouse - pan camera while held</li>
+<li>Arrow keys: Move camera</li>
+<li>+/-: Zoom</li>
+</ul>
+</li>
+<li><strong>Editor toggles</strong><ul class="list">
+<li>W: Wireframe mode, only show colored outlines</li>
+<li>H: Hide/show background image</li>
+<li>X: Hide/show polygon centers (useful for seeing density/distribution and easier selection)</li>
+<li>P: Hide/show polygon points</li>
+</ul>
+</li>
+<li><strong>Selection tools</strong> <ul class="list">
+<li>Delete: Delete selection</li>
+<li>Space: Clear selection</li>
+<li><strong>Coloring tools</strong><ul class="list">
+<li>A: Reaverage polygon color (useful for small changes that keep the same general color but add slight change)</li>
+<li>O: Change polygon color to color at mouse point</li>
+<li>C: Open color picker to select color</li>
+</ul>
+</li>
+<li><strong>Overlapping</strong><ul class="list">
+<li>Comma: Send selection to back</li>
+<li>Period: Send selection to front</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="notes"><a class="header-link" href="#notes"></a>Notes</h3>
+<ul class="list">
+<li>Images are automatically saved on exit.</li>
+<li>Resizing is supported and should work but occasionally glitches. Restarting fixes it.</li>
+<li>Any point outside the boundary has the color of the closest in-image-boundary point - this means that triangles with points outside the image bounds should get correct colors.</li>
+<li>Saving pushes all out-of-bounds points inbound. This ensures the image doesn't have a white cut in border when converting it to a raster format.</li>
+<li>The editor only recognizes the vertices file if it is in the same directory as the image with the same name.</li>
+</ul>
+<h3 id="license"><a class="header-link" href="#license"></a>License</h3>
+<p>MIT License.</p>
+<h3 id="libraries"><a class="header-link" href="#libraries"></a>Libraries</h3>
+<p>This project uses:</p>
+<ul class="list">
+<li><a href="http://www.sfml-dev.org/">SFML</a></li>
+<li><a href="https://sourceforge.net/projects/tinyfiledialogs/">Tiny File Dialogs</a></li>
+<li><a href="https://github.com/open-source-parsers/jsoncpp">jsoncpp</a></li>
+</ul>
+<h3 id="building"><a class="header-link" href="#building"></a>Building</h3>
+<p><strong>In VS2013/2015 (untested on anything else) the build must be set to &quot;Release&quot; instead of &quot;Debug&quot;.</strong></p>
+<p>The project looks for libraries to link against in the /include/ and /lib/ directories. Include and lib are in the repo for VS2013 - if you have any other compiler, drop the SFML and jsoncpp include directories in the project&#39;s include directories, and do the same for the lib, and it should compile; make sure to switch the dlls out as well. </p>
+<p>It has been tested on VS2013 and VS2015 - just switch out the libs/dlls for the corresponding ones for your compiler.</p>
+<h3 id="platforms"><a class="header-link" href="#platforms"></a>Platforms</h3>
+<p>It <em>theoretically</em> should work on all platforms, however it&#39;s only been tested on windows.</p>
+  </div>
+
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+</body>
+</html>
