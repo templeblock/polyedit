@@ -377,28 +377,28 @@ void Engine::draw(){
 
 // Checks input for arrow keys and +/- for camera movement
 void Engine::handleCamera() {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && window->hasFocus()) {
 		view.move(sf::Vector2f(-2 * viewzoom, 0));
 		window->setView(view);
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && window->hasFocus()) {
 		view.move(sf::Vector2f(2 * viewzoom, 0));
 		window->setView(view);
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && window->hasFocus()) {
 		view.move(sf::Vector2f(0, -2 * viewzoom));
 		window->setView(view);
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && window->hasFocus()) {
 		view.move(sf::Vector2f(0, 2 * viewzoom));
 		window->setView(view);
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Dash)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Dash) && window->hasFocus()) {
 		viewzoom *= 1.01f;
 		view.zoom(1.01f);
 		window->setView(view);
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Equal)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Equal) && window->hasFocus()) {
 		viewzoom *= 0.99f;
 		view.zoom(0.99f);
 		window->setView(view);
