@@ -1,7 +1,6 @@
 # polyedit
 ### 2D lowpoly editor heavily based on [this one](raincomplex.net/lowpolyeditor)
 
-### Screenshots
 ![Image](Screenshots/screenshot.png)
 
 ### Libraries
@@ -11,6 +10,8 @@ This project uses:
 * [jsoncpp](https://github.com/open-source-parsers/jsoncpp)
 
 ### Building
+**In VS2013/2015 (untested on anything else) the build must be set to "Release" instead of "Debug".**
+
 The project looks for libraries to link against in the /include/ and /lib/ directories. Include and lib are in the repo for VS2013 - if you have any other compiler, drop the SFML and jsoncpp include directories in the project's include directories, and do the same for the lib, and it should compile; make sure to switch the dlls out as well. 
 
 It has been tested on VS2013 and VS2015 - just switch out the libs/dlls for the corresponding ones for your compiler.
