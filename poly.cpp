@@ -43,7 +43,7 @@ Poly::Poly(Point* _p1, Point* _p2, Point* _p3, int _s1, int _s2, int _s3, sf::Co
 	center.y = (p1->vector.y + p2->vector.y + p3->vector.y) / 3;
 }
 
-void Poly::updateCShape() {
+void Poly::updateCShape(float viewzoom) {
 	sf::ConvexShape ctshape;
 	ctshape.setPointCount(3);
 	ctshape.setPoint(0, p1->vector);
@@ -58,7 +58,7 @@ void Poly::updateCShape() {
 		ctshape.setOutlineColor(outlinecolor);
 	} 
 	else {
-		ctshape.setOutlineThickness(1);
+		ctshape.setOutlineThickness(-1*viewzoom);
 		fillcolor.a = 0;
 		ctshape.setFillColor(fillcolor);
 		sf::Color outlinecolor = fillcolor;
@@ -66,7 +66,7 @@ void Poly::updateCShape() {
 		ctshape.setOutlineColor(outlinecolor);
 	}
 	if (selected){
-		ctshape.setOutlineThickness(2);
+		ctshape.setOutlineThickness(-1*viewzoom);
 		ctshape.setOutlineColor(sf::Color::Blue);
 	}
 	cshape = ctshape;

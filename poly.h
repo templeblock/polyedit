@@ -19,7 +19,7 @@ public:
 	int sa[3]; // Array autofilled from constructor s1,2,3 but edit this and call updatePointsToArray // Fix this
 	sf::Color fillcolor;
 	sf::ConvexShape cshape;
-	void updateCShape();
+	void updateCShape(float viewzoom);
 	bool isWireframe = false;
 	void updatePointers(std::vector<Point>& pts);
 	void updatePointsToArray();

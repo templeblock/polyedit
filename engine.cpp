@@ -6,6 +6,11 @@
 #include "json\json.h"
 #include <iomanip>
 
+// fix warnings
+#ifdef _WIN32
+#define strdup _strdup
+#endif
+
 // The title of the window set in the constructor.
 #define WINDOWTITLE "Lowpoly Editor"
 // Starting window size.
@@ -299,7 +304,7 @@ void Engine::handleEvents(sf::Event event){
 // This function runs every frame.
 void Engine::update(){
 	for (Poly& polygon : polygons){
-		polygon.updateCShape();
+		polygon.updateCShape(viewzoom);
 		polygon.updateCenter();
 	}
 	for (Point& point : rpoints){
@@ -665,6 +670,10 @@ sf::Color Engine::avgClr(Point& p1, Point& p2, Point& p3, int samples){
 	int g = 0;
 	int b = 0;
 	for (int i = 0; i < samples; i++){
+		// should probably clamp earlier, bandaid fix
+		p1.vector = getClampedImgPoint(p1.vector);
+		p2.vector = getClampedImgPoint(p2.vector);
+		p3.vector = getClampedImgPoint(p3.vector);
 		sf::Vector2f pixel = randPt(p1, p2, p3);
 		pixel = getClampedImgPoint(pixel);
 		sf::Color color = img.getPixel(pixel.x, pixel.y);
@@ -732,7 +741,7 @@ sf::Vector2f Engine::getClampedImgPoint(const sf::Vector2f& vec){
 		if (result.x < 0){
 			result.x = 0;
 		}
-		else {
+		else if (result.x > img.getSize().x) {
 			result.x = img.getSize().x;
 		}
 	}
@@ -740,7 +749,7 @@ sf::Vector2f Engine::getClampedImgPoint(const sf::Vector2f& vec){
 		if (result.y < 0){
 			result.y = 0;
 		}
-		else {
+		else if (result.y > img.getSize().y){
 			result.y = img.getSize().y;
 		}
 	}
@@ -758,7 +767,7 @@ void Engine::saveVector(std::string filename){
 	sfilestrm.open(sfile, std::ios::out | std::fstream::trunc);
 	char headerc[350];
 	const char *hdr = "<?xml version=\"1.0\" standalone=\"no\"?>\n<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"><svg width=\"%d\" height=\"%d\" viewBox=\"0 0 %d %d\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n<style type=\"text/css\"> polygon { stroke-width: .5; stroke-linejoin: round; } </style>";
-	sprintf(headerc, hdr,
+	sprintf_s(headerc, hdr,
 		image.getSize().x,
 		image.getSize().y,
 		image.getSize().x,
@@ -856,7 +865,7 @@ void Engine::loadJSON(){
 					  &rpoints[ptl[2]],ptl[0], ptl[1], ptl[2], color);
 		p.updatePointsToArray();
 		p.updateCenter();
-		p.updateCShape();
+		p.updateCShape(viewzoom);
 		polygons.push_back(p);
 	}
 	std::cout << "total polygons loaded: " << polygons.size() << "\n";
