@@ -311,6 +311,7 @@ void Engine::update(){
 	}
 	for (Point& point : rpoints){
 		point.updateCShape(viewzoom);
+		point.vector = getClampedImgPoint(point.vector);
 	}
 	for (auto& point : nspoints){
 		point->selected = false;
@@ -672,12 +673,7 @@ sf::Color Engine::avgClr(Point& p1, Point& p2, Point& p3, int samples){
 	int g = 0;
 	int b = 0;
 	for (int i = 0; i < samples; i++){
-		// should probably clamp earlier, bandaid fix
-		p1.vector = getClampedImgPoint(p1.vector);
-		p2.vector = getClampedImgPoint(p2.vector);
-		p3.vector = getClampedImgPoint(p3.vector);
 		sf::Vector2f pixel = randPt(p1, p2, p3);
-		pixel = getClampedImgPoint(pixel);
 		sf::Color color = img.getPixel(pixel.x, pixel.y);
 		r += color.r;
 		g += color.g;

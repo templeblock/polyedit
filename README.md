@@ -49,6 +49,12 @@ Panning works without a mouse.
     - **Overlapping**
       - Comma: Send selection to back
       - Period: Send selection to front
+
+**Antialiasing levels** are supported, just launch the exe with a number after it for the AA level.  
+
+Example:  
+    polyedit 8
+for 8x AA.
   
 ### Platforms
 It *theoretically* should work on all platforms, however it's only been tested on windows.
