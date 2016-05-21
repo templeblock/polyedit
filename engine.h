@@ -7,7 +7,7 @@
 #include <fstream>
 class Engine {
 public:
-	Engine();
+	Engine(int aaLevel);
 	~Engine();
 
 	// Member functions

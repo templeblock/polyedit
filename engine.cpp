@@ -37,8 +37,10 @@ float v2fdistance(sf::Vector2f a, sf::Vector2f b){
 
 // Constructor for the main engine.
 // Sets up renderwindow variables and loads an image.
-Engine::Engine() {
-	window = new sf::RenderWindow(sf::VideoMode(WINDOW_X, WINDOW_Y), WINDOWTITLE);
+Engine::Engine(int aaLevel) {
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = aaLevel;
+	window = new sf::RenderWindow(sf::VideoMode(WINDOW_X, WINDOW_Y), WINDOWTITLE, sf::Style::Default,settings);
 	window->setFramerateLimit(FRAMERATE);
 	window->setVerticalSyncEnabled(false);
 	window->setKeyRepeatEnabled(false); 
