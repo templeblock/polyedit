@@ -40,7 +40,6 @@ public:
 	sf::Vector2f getClampedImgPoint(const sf::Vector2f& vec);
 
 	void createColorPickerGUI();
-	void createImageExportGUI();
 	void handleGUItoggleEvent(sf::Event);
 	// Members
 	// -------------------------
@@ -108,6 +107,5 @@ public:
 
 	// GUI flags
 	bool showColorPickerGUI = false;
-	bool showImageExportGUI = false;
 };
 

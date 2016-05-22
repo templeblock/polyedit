@@ -11,6 +11,7 @@
 #include "imgui-backends/SFML/imgui-rendering-SFML.h"
 #include "imgui/imguicolorpicker.h"
 
+
 // Fix VS warning about posix or something-or-other
 #ifdef _WIN32
 #define strdup _strdup
@@ -86,7 +87,7 @@ void Engine::run() {
 			// Handle events in relation to the GUI
 			handleGUItoggleEvent(event);
 			// If the GUI is open pass events to it and block left clicks
-			if (showColorPickerGUI || showImageExportGUI) {
+			if (showColorPickerGUI) {
 				ImGui::SFML::ProcessEvent(event);
 				if (!(event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)) {
 					handleEvents(event);
@@ -99,21 +100,16 @@ void Engine::run() {
 		}
 		window->clear(BGCOLOR);
 		// If a GUI is up update them
-		if (showColorPickerGUI || showImageExportGUI) {
+		if (showColorPickerGUI) {
 			ImGui::SFML::UpdateImGui();
 			ImGui::SFML::UpdateImGuiRendering();
-			if (showColorPickerGUI && !showImageExportGUI) {
-				createColorPickerGUI();
-			}
-			else if (showImageExportGUI && !showColorPickerGUI) {
-				createImageExportGUI();
-			}
+			createColorPickerGUI();
 		}
 		// Main loop
 		update();
 		draw();
 		// Render UI
-		if (showColorPickerGUI || showImageExportGUI) {
+		if (showColorPickerGUI) {
 			ImGui::Render();
 		}
 		window->display();
@@ -166,12 +162,7 @@ int Engine::load(){
 // Check if the GUI is being toggled; pause other inputs if it is
 void Engine::handleGUItoggleEvent(sf::Event event) {
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
-		if (showImageExportGUI) { showImageExportGUI = !showImageExportGUI; }
 		showColorPickerGUI = !showColorPickerGUI;
-	}
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E) {
-		if (showColorPickerGUI) { showColorPickerGUI = !showColorPickerGUI; }
-		showImageExportGUI = !showImageExportGUI;
 	}
 }
 
@@ -444,11 +435,6 @@ void Engine::createColorPickerGUI() {
 		ImGui::Text("No polygon selected.");
 	}
 	ImGui::End();
-}
-
-// Create GUI elements for export
-void Engine::createImageExportGUI() {
-
 }
 
 // Checks input for arrow keys and +/- for camera movement
