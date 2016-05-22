@@ -39,6 +39,9 @@ public:
 	sf::Vector2f randPt(Point& p1, Point& p2, Point& p3); 
 	sf::Vector2f getClampedImgPoint(const sf::Vector2f& vec);
 
+	void createColorPickerGUI();
+	void createImageExportGUI();
+	void handleGUItoggleEvent(sf::Event);
 	// Members
 	// -------------------------
 	
@@ -72,9 +75,10 @@ public:
 
 	// Selected pointers:
 	// spoint: Selected point for dragging.
-	// spoly: Broken right now. Supposed to be a pointer to the selected polygon; works as a null test.
-	Poly*  spoly;
-	Point* spoint;  
+	// spoly: it actually worked the whole time
+	// spolycolor: Color of selected polygon in float[4]
+	Poly*  spoly = NULL;
+	Point* spoint;
 
 	// Toggles:
 	// Toggles for the drawing. Most are exactly what they are named.
@@ -100,6 +104,10 @@ public:
 	sf::Vector2f pdragoffset;           
 	sf::Vector2f pdraginitpt;           
 	sf::Vector2f cmpos;                 
-	int nindex;                         
+	int nindex;             
+
+	// GUI flags
+	bool showColorPickerGUI = false;
+	bool showImageExportGUI = false;
 };
 

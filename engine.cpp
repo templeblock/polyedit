@@ -5,8 +5,13 @@
 #include "tinyfiledialogs.h"
 #include "json\json.h"
 #include <iomanip>
+#include <imgui/imgui.h>
+#include "imgui/imconfig.h"
+#include "imgui-backends/SFML/imgui-events-SFML.h"
+#include "imgui-backends/SFML/imgui-rendering-SFML.h"
+#include "imgui/imguicolorpicker.h"
 
-// fix warnings
+// Fix VS warning about posix or something-or-other
 #ifdef _WIN32
 #define strdup _strdup
 #endif
@@ -50,6 +55,12 @@ Engine::Engine(int aaLevel) {
 	view.reset(sf::FloatRect(0, 0, WINDOW_X, WINDOW_Y));
 	window->setView(view);
 	drawimg.setTexture(image);
+
+	// Initialize GUI and backend
+	ImGui::SFML::SetRenderTarget(*window);
+	ImGui::SFML::InitImGuiRendering();
+	ImGui::SFML::SetWindow(*window);
+	ImGui::SFML::InitImGuiEvents();
 }
 
 // Destructor for the main engine.
@@ -63,19 +74,48 @@ Engine::~Engine() {
 // Saves on exit, 
 // and delegates update/draw as well.
 void Engine::run() {
-	while (window->isOpen()){
+	while (window->isOpen()) {
 		sf::Event event;
-		while (window->pollEvent(event)){
-			if (event.type == sf::Event::Closed){
+		while (window->pollEvent(event)) {
+			if (event.type == sf::Event::Closed) {
 				saveJSON();
+				ImGui::SFML::Shutdown();
 				window->close();
 				std::exit(1);
 			}
-			handleEvents(event);
+			// Handle events in relation to the GUI
+			handleGUItoggleEvent(event);
+			// If the GUI is open pass events to it and block left clicks
+			if (showColorPickerGUI || showImageExportGUI) {
+				ImGui::SFML::ProcessEvent(event);
+				if (!(event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)) {
+					handleEvents(event);
+				}
+			}
+			// If the GUI is closed, run all events regardless
+			else {
+				handleEvents(event);
+			}
 		}
 		window->clear(BGCOLOR);
+		// If a GUI is up update them
+		if (showColorPickerGUI || showImageExportGUI) {
+			ImGui::SFML::UpdateImGui();
+			ImGui::SFML::UpdateImGuiRendering();
+			if (showColorPickerGUI && !showImageExportGUI) {
+				createColorPickerGUI();
+			}
+			else if (showImageExportGUI && !showColorPickerGUI) {
+				createImageExportGUI();
+			}
+		}
+		// Main loop
 		update();
 		draw();
+		// Render UI
+		if (showColorPickerGUI || showImageExportGUI) {
+			ImGui::Render();
+		}
 		window->display();
 	}
 }
@@ -122,6 +162,19 @@ int Engine::load(){
 	sstream.close();
 	return 0;
 }
+
+// Check if the GUI is being toggled; pause other inputs if it is
+void Engine::handleGUItoggleEvent(sf::Event event) {
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
+		if (showImageExportGUI) { showImageExportGUI = !showImageExportGUI; }
+		showColorPickerGUI = !showColorPickerGUI;
+	}
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E) {
+		if (showColorPickerGUI) { showColorPickerGUI = !showColorPickerGUI; }
+		showImageExportGUI = !showImageExportGUI;
+	}
+}
+
 
 // Handles the events that the sfml window recieves.
 // The following events are handled:
@@ -187,16 +240,6 @@ void Engine::handleEvents(sf::Event event){
 		if (event.key.code == sf::Keyboard::Delete){
             std::cout << "Deleting selection (Delete) \n";
 			deleteSelection();
-		}
-        // Choose color for selected poly
-		if (event.key.code == sf::Keyboard::C) {
-            std::cout << "Opening color picker for selected polygon (C)\n";
-			if (spoly != NULL){
-                sf::Color color = chooseColor();
-                spoly->fillcolor = color;
-            } else {
-                "Can't change color - no polygon selected (C) \n";
-            }
 		}
         // Reaverage colors
 		if (event.key.code == sf::Keyboard::A) {
@@ -305,6 +348,7 @@ void Engine::handleEvents(sf::Event event){
 // Handles logic directly before drawing.
 // This function runs every frame.
 void Engine::update(){
+	// safeguard bandaid fix for spoly FIX ME
 	for (Poly& polygon : polygons){
 		polygon.updateCShape(viewzoom);
 		polygon.updateCenter();
@@ -381,6 +425,30 @@ void Engine::draw(){
             window->draw(cshape);
         }
     }
+}
+
+// Create GUI elements for color picker
+void Engine::createColorPickerGUI() {
+	ImGui::Begin("Color Picker");
+	bool isPolygonSelected = false;
+	if (spoly != NULL){
+		float spolycolor[3];
+		spolycolor[0] = spoly->fillcolor.r / 255.0f;
+		spolycolor[1] = spoly->fillcolor.g / 255.0f;
+		spolycolor[2] = spoly->fillcolor.b / 255.0f;
+		if (ColorPicker3(spolycolor)){
+			spoly->fillcolor = sf::Color(spolycolor[0] * 255.0f, spolycolor[1] * 255.0f, spolycolor[2] * 255.0f, 255);
+		}
+	}
+	else {
+		ImGui::Text("No polygon selected.");
+	}
+	ImGui::End();
+}
+
+// Create GUI elements for export
+void Engine::createImageExportGUI() {
+
 }
 
 // Checks input for arrow keys and +/- for camera movement
@@ -522,7 +590,7 @@ void Engine::onLeftClick(sf::Vector2f point) {
 	}
 	//std::cout << "Placing vertex at adjusted point " << point.x << ", " << point.y << "\n";
 	// Test whether to make new point or not
-	bool near = false;
+	bool ispointnear = false;
 	nindex = -1;
 	for (unsigned i = 0; i < rpoints.size(); i++) {
 		Point& rpoint = rpoints[i];
@@ -531,12 +599,12 @@ void Engine::onLeftClick(sf::Vector2f point) {
         // Check if mouse is in snapping range; then set near appropriately
 		if ((point.x - rpv.x < clickdist*viewzoom && point.x - rpv.x > -clickdist*viewzoom) &&
 			(point.y - rpv.y < clickdist*viewzoom && point.y - rpv.y > -clickdist*viewzoom)) {
-			near = true;
+			ispointnear = true;
 			nindex = i;
 		}
 	}
 	// If its near another, snap to it -> shared edges
-	if (near) {
+	if (ispointnear) {
 		//spoint = &rpoints[nindex]; // spoint is used to get desired mouse position
 		sf::Vector2f mpos = getMPosFloat();
 		mpos = windowToGlobalPos(mpos);
@@ -572,7 +640,7 @@ void Engine::onLeftClick(sf::Vector2f point) {
 		}
 	}
 	// Create a new point
-	if (!near) {
+	if (!ispointnear) {
 		rpoints.push_back(Point(point, 5));
 		spointsin.push_back(rpoints.size() - 1);
 		spoint = NULL;

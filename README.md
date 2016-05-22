@@ -12,6 +12,8 @@ This project uses:
 * [SFML](http://www.sfml-dev.org/)
 * [Tiny File Dialogs](https://sourceforge.net/projects/tinyfiledialogs/)
 * [jsoncpp](https://github.com/open-source-parsers/jsoncpp)
+* [imgui](https://github.com/ocornut/imgui)
+* [SFML imgui backend](https://github.com/Mischa-Alff/imgui-backends)
 
 ### Building
 **In VS2013/2015 (untested on anything else) the build must be set to "Release" instead of "Debug".**
