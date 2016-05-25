@@ -1,11 +1,10 @@
-#pragma once
 #include "stdafx.h"
 #include "engine.h"
 #include "poly.h"
 #include "tinyfiledialogs.h"
-#include "json\json.h"
+#include "json/json.h"
 #include <iomanip>
-#include <imgui/imgui.h>
+#include "imgui/imgui.h"
 #include "imgui/imconfig.h"
 #include "imgui-backends/SFML/imgui-events-SFML.h"
 #include "imgui-backends/SFML/imgui-rendering-SFML.h"
@@ -819,7 +818,7 @@ void Engine::saveVector(std::string filename){
 	sfilestrm.open(sfile, std::ios::out | std::fstream::trunc);
 	char headerc[350];
 	const char *hdr = "<?xml version=\"1.0\" standalone=\"no\"?>\n<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"><svg width=\"%d\" height=\"%d\" viewBox=\"0 0 %d %d\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n<style type=\"text/css\"> polygon { stroke-width: .5; stroke-linejoin: round; } </style>";
-	sprintf_s(headerc, hdr,
+	snprintf(headerc, sizeof(headerc), hdr,
 		image.getSize().x,
 		image.getSize().y,
 		image.getSize().x,

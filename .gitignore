@@ -11,5 +11,7 @@
 *.sdf
 *.ibp
 *.pdb
+*.ini
 Debug/
 Release/
+build/

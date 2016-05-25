@@ -7,7 +7,9 @@
 
 #include "targetver.h"
 #include <stdio.h>
+#ifdef __WINDOWS__
 #include <tchar.h>
+#endif
 #include "SFML/Graphics.hpp"
 
 // TODO: reference additional headers your program requires here

@@ -12,7 +12,8 @@ Poly::~Poly()
 
 Poly::Poly(sf::Color _fillcolor) {
 	fillcolor = _fillcolor;
-	p1, p2, p3 = &Point(0, 0, 5);
+        // FIXME
+	//p1, p2, p3 = &Point(0, 0, 5);
 }
 Poly::Poly(Point* _p1, Point* _p2, Point* _p3, int _s1, int _s2, int _s3) {
 	p1 = _p1;

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "stdafx.h"
 #include "engine.h"
 #include <sstream>
@@ -22,5 +20,3 @@ int main(int argc, char* argv[]){
 	engine.run();
 	return 0;
 }
-
- 
